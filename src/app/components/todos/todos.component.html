@@ -1,0 +1,47 @@
+<div class="todos">
+  <form (submit)="addTodo()" class="add-form hidden">
+    <input
+      type="text"
+      name="inputTodo"
+      placeholder="Enter todo item..."
+      class="todo-input"
+      [(ngModel)]="inputTodo"
+    />
+    <input type="submit" value="Add Item" class="btn-submit" />
+  </form>
+
+  <form (submit)="editTodo()" class="hidden edit-form">
+    <input
+      type="text"
+      name="inputTodo"
+      placeholder="Enter todo item..."
+      class="todo-input"
+      [(ngModel)]="inputTodo"
+    />
+    <input type="submit" value="Edit Item" class="btn-submit" />
+  </form>
+
+  <input
+    type="submit"
+    (click)="toggleAddTodo()"
+    value="Add Item"
+    class="add-form-submit btn-submit"
+  />
+
+  <div
+    *ngFor="let todo of todos; let i = index"
+    class="todo {{ todo.completed ? 'done' : '' }}"
+  >
+    <div class="id">{{ i + 1 }}</div>
+    <div class="content" (click)="toggleDone(i)">{{ todo.content }}</div>
+    <button class="delete" (click)="deleteTodo(i)">Remove</button>
+    <button class="edit" (click)="toggleEditTodo(i)">Edit</button>
+  </div>
+
+  <input
+    type="submit"
+    (click)="toggleClearList()"
+    value="Clear List"
+    class="remove-all btn-submit"
+  />
+</div>
