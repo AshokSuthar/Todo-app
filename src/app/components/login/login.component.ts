@@ -11,6 +11,8 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   message = 'status: N/A';
+  userName: string = '';
+  userPassword: string = '';
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn) {
@@ -24,19 +26,18 @@ export class LoginComponent implements OnInit {
   // }
 
   login() {
-    this.authService.login().subscribe((res) => {
-      if (this.authService.isLoggedIn) {
-        const redirect = this.authService.redirectUrl
-          ? this.router.parseUrl(this.authService.redirectUrl)
-          : 'login';
-        this.message = 'status: logged in';
-        console.log(redirect);
-
-        localStorage.setItem('userState', JSON.stringify({ isLoggedIn: true }));
-
-        this.router.navigateByUrl(redirect);
-      }
-    });
+    this.authService
+      .login(this.userName, this.userPassword)
+      .subscribe((res) => {
+        if (this.authService.isLoggedIn) {
+          const redirect = this.authService.redirectUrl
+            ? this.router.parseUrl(this.authService.redirectUrl)
+            : 'login';
+          this.message = 'status: logged in';
+          console.log(redirect);
+          this.router.navigateByUrl(redirect);
+        }
+      });
   }
 
   logout() {
