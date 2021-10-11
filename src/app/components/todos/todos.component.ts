@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Todo } from './../../models/Todo';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todos',
@@ -13,10 +15,11 @@ export class TodosComponent implements OnInit {
   currentId: number = 0;
   currentTodo: Todo = { content: '', completed: false };
 
-  constructor() {
+  constructor(private authService: AuthService, private router: Router) {
     this.todos = [];
   }
 
+  message = 'status: N/A';
   ngOnInit(): void {
     this.todos = JSON.parse(localStorage.getItem('todos') || '[]');
   }
@@ -95,5 +98,21 @@ export class TodosComponent implements OnInit {
     console.log(JSON.stringify(this.todos));
 
     localStorage.setItem('todos', JSON.stringify(this.todos));
+  }
+
+  logout() {
+    this.message = 'status: logged out';
+
+    this.authService.logout().subscribe((res) => {
+      if (!this.authService.isLoggedIn) {
+        const redirect = this.authService.redirectUrl
+          ? this.router.parseUrl(this.authService.redirectUrl)
+          : 'todos';
+        this.message = 'status: logged out';
+        console.log(redirect);
+
+        this.router.navigateByUrl(redirect);
+      }
+    });
   }
 }
